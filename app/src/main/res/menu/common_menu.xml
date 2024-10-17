@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/test"
+        android:title="test"
+        android:icon="@drawable/flash"
+        android:iconTint="@color/tomato"/>
+    <item android:id="@+id/settings"
+        android:icon="@drawable/s"
+        android:iconTint="@color/tomato"
+        android:title="settings"/>
+</menu>

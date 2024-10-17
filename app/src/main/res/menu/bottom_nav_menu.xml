@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/haven"
+        android:icon="@drawable/haven"
+        android:title="Haven" />
+    <item
+        android:id="@+id/whisper_box"
+        android:icon="@drawable/whisper_box"
+        android:title="WhisperBox" />
+    <item
+        android:id="@+id/flash_feed"
+        android:icon="@drawable/flash"
+        android:title="FlashFeed" />
+    <item
+        android:id="@+id/mirror"
+        android:icon="@drawable/person"
+        android:title="Mirror" />
+</menu>
