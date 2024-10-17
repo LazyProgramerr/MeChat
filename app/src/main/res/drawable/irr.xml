@@ -1,0 +1,15 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Define your irregular circle-like shape -->
+    <path android:fillColor="#FF6200EE"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:pathData="M50,5
+                           C70,10,90,30,95,50
+                           C100,70,85,95,60,95
+                           C35,95,10,80,5,55
+                           C0,30,30,5,50,5
+                           Z"/>
+
+</shape>
