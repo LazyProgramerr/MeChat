@@ -22,4 +22,6 @@ object Notification {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(bundle.getInt("notificationId"),builder.build())
     }
+
+
 }

@@ -2,6 +2,10 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MeChat" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+         <item name="colorPrimary">@color/antique_white</item>
+        <item name="android:statusBarColor">@color/tomato</item>
+    </style>
+    <style name="MirrorFragment" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

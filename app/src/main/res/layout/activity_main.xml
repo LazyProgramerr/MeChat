@@ -31,14 +31,14 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:paddingHorizontal="5dp"
-            android:drawableEnd="@drawable/search_icon"
-            android:layout_toStartOf="@id/header_options"/>
+            android:layout_toStartOf="@id/header_options"
+            app:drawableEndCompat="@drawable/search_icon" />
         <TextView
             android:id="@+id/header_options"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableRight="@drawable/three_dots"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true"
+            app:drawableRightCompat="@drawable/three_dots" />
 
 
     </RelativeLayout>

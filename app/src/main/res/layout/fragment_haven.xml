@@ -13,4 +13,7 @@
         android:text="hello from HAVEN"
         android:gravity="center"/>
 
+    <include
+        layout="@layout/layout_stories"/>
+
 </FrameLayout>

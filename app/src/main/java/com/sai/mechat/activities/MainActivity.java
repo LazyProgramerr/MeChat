@@ -2,6 +2,8 @@ package com.sai.mechat.activities;
 
 import static com.sai.mechat.constants.IntentConstants.USER_DETAILS_CODE;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sai.mechat.R;
+import com.sai.mechat.functions.Animation;
 import com.sai.mechat.functions.Time;
 import com.sai.mechat.ViewModels.UserViewModel;
 import com.sai.mechat.databinding.ActivityMainBinding;
@@ -30,6 +33,7 @@ import com.sai.mechat.fragments.FlashFeedFragment;
 import com.sai.mechat.fragments.HavenFragment;
 import com.sai.mechat.fragments.MirrorFragment;
 import com.sai.mechat.fragments.WhisperBoxFragment;
+import com.sai.mechat.functions.functions;
 import com.sai.mechat.models.User;
 import com.sai.mechat.notification.Token;
 
@@ -109,10 +113,14 @@ public class MainActivity extends AppCompatActivity {
                         i.putExtra("user_data",userVM.getUser(fUser.getUid()).getValue());
                         userDetailsActivityLauncher.launch(i);
                     }
+                    case "vibrate" -> {
+                        functions.INSTANCE.vibrate(this,500);
+                    }
                 }
                 return false;
             });
             popupMenu.show();
+            Animation.INSTANCE.vibrate(this,view.headerOptions,500);
         });
 
         view.bottomBar.setOnTabSelectListener(new AnimatedBottomBar.OnTabSelectListener() {
@@ -142,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(int index, @NonNull AnimatedBottomBar.Tab tab) {
             }
         });
+
 
 
     }

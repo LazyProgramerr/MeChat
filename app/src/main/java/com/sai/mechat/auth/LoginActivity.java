@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.sai.mechat.R;
 import com.sai.mechat.activities.MainActivity;
@@ -35,11 +36,13 @@ import java.util.Objects;
 
 import com.sai.mechat.dialogs.ReAuthDialog;
 import com.sai.mechat.manager.SharedPreferenceManager;
+import com.sai.mechat.notification.Token;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding view;
     private FirebaseAuth fAuth;
     private FirebaseUser fUser;
+    private DatabaseReference db;
     private GoogleSignInClient client;
     private boolean isPasswordVisible = false;
 
@@ -51,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
         fAuth = FirebaseAuth.getInstance();
         fUser = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseDatabase.getInstance().getReference("users");
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -100,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                         // get device token and store
+                        String token = Token.INSTANCE.getToken();
+                        db.child(fUser.getUid()).child("Token").setValue(token);
                         startActivity(new Intent(getApplicationContext(), VerifyMailActivity.class));
                         finishAffinity();
 
@@ -145,6 +151,8 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()){
                 Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                 // get device token and store
+                String token = Token.INSTANCE.getToken();
+                db.child(fUser.getUid()).child("Token").setValue(token);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finishAffinity();
 
