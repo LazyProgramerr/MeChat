@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sai.mechat.R;
 import com.sai.mechat.activities.MainActivity;
 import com.sai.mechat.databinding.ActivityLoginBinding;
@@ -51,12 +53,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         view = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(view.getRoot());
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         fAuth = FirebaseAuth.getInstance();
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseDatabase.getInstance().getReference("users");
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -104,10 +107,12 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                         // get device token and store
-                        String token = Token.INSTANCE.getToken();
-                        db.child(fUser.getUid()).child("Token").setValue(token);
-                        startActivity(new Intent(getApplicationContext(), VerifyMailActivity.class));
-                        finishAffinity();
+                        fUser = FirebaseAuth.getInstance().getCurrentUser();
+                        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
+                            db.child(fUser.getUid()).child("Token").setValue(s);
+                            startActivity(new Intent(getApplicationContext(), VerifyMailActivity.class));
+                            finishAffinity();
+                        });
 
                     }else{
                         Toast.makeText(this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
@@ -151,10 +156,11 @@ public class LoginActivity extends AppCompatActivity {
             if (task.isSuccessful()){
                 Toast.makeText(this, "success", Toast.LENGTH_SHORT).show();
                 // get device token and store
-                String token = Token.INSTANCE.getToken();
-                db.child(fUser.getUid()).child("Token").setValue(token);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finishAffinity();
+                FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
+                    db.child(fUser.getUid()).child("Token").setValue(s);
+                    startActivity(new Intent(getApplicationContext(), VerifyMailActivity.class));
+                    finishAffinity();
+                });
 
             }else{
                 Toast.makeText(this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
@@ -201,9 +207,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null  && !user.isEmailVerified()){
-            startActivity(new Intent(getApplicationContext(), VerifyMailActivity.class));
+            Intent i = new Intent(getApplicationContext(), VerifyMailActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
             finishAffinity();
 //            dateAndTime lastLoginTime = SharedPreferenceManager.getLastLoginTime(this);
 //            if (TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - lastLoginTime.getPreviousLoginTime()) > 2)
@@ -214,7 +223,9 @@ public class LoginActivity extends AppCompatActivity {
 //            }
 
         } else if (user != null  && user.isEmailVerified()) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
             finishAffinity();
         }
 

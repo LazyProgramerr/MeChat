@@ -1,6 +1,7 @@
 package com.sai.mechat.activities;
 
 import static com.sai.mechat.constants.IntentConstants.USER_DETAILS_CODE;
+import static com.sai.mechat.constants.Patterns.TIME_12_HH_MM;
 
 import android.app.NotificationManager;
 import android.content.Context;
@@ -116,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
                     case "vibrate" -> {
                         functions.INSTANCE.vibrate(this,500);
                     }
+                    case "Notifications" -> {
+                        startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                    }
                 }
                 return false;
             });
@@ -165,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference userStateRef = db.getReference("users/"+fU.getUid());
 
         userStateRef.child("userOnline").setValue("online");
-        userStateRef.child("Token").setValue(Token.INSTANCE.getToken());
+
 
     }
 
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference userStateRef = db.getReference("users/"+fUser.getUid());
-        String time = Time.INSTANCE.readableTime(System.currentTimeMillis());
+        String time = Time.INSTANCE.readableTime(System.currentTimeMillis(),TIME_12_HH_MM);
         userStateRef.child("userOnline").setValue(time);
     }
 
@@ -183,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference userStateRef = db.getReference("users/"+fUser.getUid());
-        String time = Time.INSTANCE.readableTime(System.currentTimeMillis());
+        String time = Time.INSTANCE.readableTime(System.currentTimeMillis(),TIME_12_HH_MM);
         userStateRef.child("userOnline").setValue(time);
     }
 }

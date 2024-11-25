@@ -68,7 +68,9 @@ public class VerifyMailActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if(fUser.isEmailVerified()){
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(i);
             finishAffinity();
         }else {
             fUser.sendEmailVerification();

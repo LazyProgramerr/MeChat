@@ -1,17 +1,16 @@
 package com.sai.mechat.activities
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.sai.mechat.adapters.NotificationAdapter
 import com.sai.mechat.databinding.ActivityNotificationsBinding
+import com.sai.mechat.models.NotificationModel
 
 class NotificationsActivity : AppCompatActivity() {
     private lateinit var views: ActivityNotificationsBinding
@@ -20,46 +19,38 @@ class NotificationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         views = ActivityNotificationsBinding.inflate(layoutInflater)
         setContentView(views.root)
+        val fUser = FirebaseAuth.getInstance().currentUser
+        val db = FirebaseDatabase.getInstance().getReference("users")
 
+        views.notificationRecycleView.layoutManager = LinearLayoutManager(this)
+        val itemList = ArrayList<NotificationModel>()
 
+        if (fUser != null) {
+            db.child(fUser.uid).child("Notifications").addValueEventListener(object :
+                ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    itemList.clear()
+                    for (data in snapshot.children){
+                        val notification = data.getValue(NotificationModel::class.java)
+                        notification?.let { itemList.add(it) }
+                    }
+                    val adapter = NotificationAdapter(this@NotificationsActivity,itemList)
+                    views.notificationRecycleView.adapter = adapter
 
-    }
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun showNotificationFromTIRAMISU(channelId : String, title : String, message : String, notificationId: Int){
-        val builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(android.R.drawable.star_off)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
+                }
 
-        with(NotificationManagerCompat.from(this)){
-            if (ActivityCompat.checkSelfPermission(this@NotificationsActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                override fun onCancelled(error: DatabaseError) {
 
-            }else
-                notify(notificationId,builder.build())
+                }
+
+            })
         }
-    }
-    fun showNotificationFromOreo(channelId : String, title : String, message : String, notificationId : Int){
-        val builder = NotificationCompat.Builder(this,channelId)
-            .setSmallIcon(android.R.drawable.star_off)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
 
-        val notificationManager = NotificationManagerCompat.from(this)
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        notificationManager.notify(notificationId,builder.build())
+
+
+
+
 
     }
 
-
-    val requestNotificationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()){
-        isGranted:Boolean ->
-        showNotification = isGranted
-    }
 }

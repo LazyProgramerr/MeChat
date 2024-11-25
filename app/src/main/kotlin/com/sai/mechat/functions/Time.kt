@@ -5,9 +5,9 @@ import java.util.Date
 import java.util.Locale
 
 object Time {
-    public fun readableTime(timeStamp: Long): String {
+    public fun readableTime(timeStamp: Long,pattern: String): String {
         val date = Date(timeStamp)
-        val format = SimpleDateFormat("hh:mm:ss aa", Locale.getDefault())
+        val format = SimpleDateFormat(pattern, Locale.getDefault())
         return format.format(date)
     }
 }

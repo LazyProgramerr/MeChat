@@ -67,5 +67,6 @@ class SearchActivity : AppCompatActivity() {
         views.searchLayout.visibility = View.GONE
         supportFragmentManager.beginTransaction().replace(R.id.fragment,fragment)
             .commit()
+
     }
 }

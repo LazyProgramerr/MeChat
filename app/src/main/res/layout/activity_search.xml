@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/MirrorFragment"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +30,8 @@
                 android:layout_toStartOf="@id/close_btn"
                 android:background="@drawable/round_corners"
                 android:backgroundTint="#00000000"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:hint="search user"
                 android:paddingHorizontal="10dp"/>
             <com.airbnb.lottie.LottieAnimationView
